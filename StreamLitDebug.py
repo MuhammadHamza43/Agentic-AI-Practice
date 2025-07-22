@@ -25,7 +25,7 @@ COLLECTION_NAME = "hr_policies"
 EMBEDDING_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
 OPENAI_MODEL = "gpt-4.1-nano"
 TEMPERATURE = 0.6
-SEARCH_K = 6
+SEARCH_K = 25
 TOKEN_LIMIT = 50000
 CONNECTION_TIMEOUT = 60
 MAX_RETRIES = 2
@@ -159,7 +159,7 @@ class HRPolicyAssistant:
         self.app = create_react_agent(
             model,
             tools=tools,
-            prompt="""You are an HR Policy Assistant. Your task is to help users find relevant HR policies or generate HR reports based on their queries. If needed ask for department and year of policy from user if not provided in conversation. Always call the agent for any query related to policies. If such policy does not exist say so. Follow the hat history and focus on last policy query and do not move to another policy unless user does""",
+            prompt="""You are an HR Policy Assistant. Your task is to help users find relevant HR policies or generate HR reports based on their queries.""",
             checkpointer=self.checkpointer,
         )
     
@@ -219,6 +219,10 @@ class HRPolicyAssistant:
         config = {"configurable": {"thread_id": thread_id}}
         input_message = HumanMessage(content=user_input)
         
+        # Print context for debugging
+        print("Agent context:")
+        print("Messages:", [{"role": "user", "content": user_input}])
+        print("Config:", config)
         # Stream response
         ai_response = ""
         last_event = None
